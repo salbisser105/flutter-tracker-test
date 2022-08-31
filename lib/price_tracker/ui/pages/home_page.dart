@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     fetchCoin();
-    Timer.periodic(const Duration(seconds: 10), (timer) => fetchCoin());
+    Timer.periodic(const Duration(seconds: 5), (timer) => fetchCoin());
     super.initState();
   }
 
