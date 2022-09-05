@@ -13,11 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    final List coinList = Helpers.fetchCoin() as List;
-    super.initState();
-  }
+
+  Helpers helpers = Helpers();
 
   @override
   Widget build(BuildContext context) {
@@ -35,18 +32,28 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.bold),
           ),
         ),
-        body: ListView.builder(
+        body: FutureBuilder<List<Coin>>(
+          future: helpers.fetchCoin(),
+          builder: (context, snapshot) {
+            var data = snapshot.data;
+            if (!snapshot.hasData){
+              return const Center(child: CircularProgressIndicator());
+            }
+            return ListView.builder(
             scrollDirection: Axis.vertical,
-            itemCount: coinList.length,
+            itemCount: data?.length,
             itemBuilder: (context, index) {
               return CoinCardWidget(
-                name: coinList[index].name,
-                symbol: coinList[index].symbol,
-                imageUrl: coinList[index].imageUrl,
-                price: coinList[index].price.toDouble(),
-                change: coinList[index].change.toDouble(),
-                changePercentage: coinList[index].changePercentage.toDouble(),
+                name: data![index].name,
+                symbol: data[index].symbol,
+                imageUrl: data[index].imageUrl,
+                price: data[index].price.toDouble(),
+                change: data[index].change.toDouble(),
+                changePercentage: data[index].changePercentage.toDouble(),
               );
-            }));
+            });
+          }));
+          
+        
   }
 }
